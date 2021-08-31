@@ -1,12 +1,16 @@
 import React from 'react';
-import HomePage from './Containers/Homepage';
+
+import HomePage from './containers/Homepage';
+import { MetamaskContextProvider } from './services/metamask/metamask.context';
 
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <HomePage />
+      <MetamaskContextProvider>
+        <HomePage />
+      </MetamaskContextProvider>
     </div>
   );
 }
