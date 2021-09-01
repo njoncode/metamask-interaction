@@ -61,7 +61,7 @@ export const fetchMetamaskAccountDetails = async () => {
       accounts,
       connectedNetwork: network,
       connectedAccount: accounts[0],
-      balance: web3.utils.toWei(balance, 'ether'),
+      balance: web3.utils.fromWei(balance, 'ether'),
     };
   } catch (err) {
     console.error('fetchMetamaskAccountDetails error : ', err);
@@ -72,4 +72,21 @@ export const fetchMetamaskAccountDetails = async () => {
       balance: null,
     };
   }
+};
+
+export const transferEther = async (receiver, amount) => {
+  const web3 = new Web3(window.ethereum);
+  console.log('web3: ', web3);
+  const accounts = await web3.eth.getAccounts();
+  const sender = accounts[0];
+  console.log('sender: ', sender);
+  console.log('receiver: ', receiver);
+  const amountToTransfer = web3.utils.toWei(String(amount), 'ether');
+  console.log('amountToTransfer: ', amountToTransfer);
+  await web3.eth.sendTransaction({
+    from: sender,
+    to: receiver,
+    value: amountToTransfer,
+  });
+  await web3.eth.getBalance(sender);
 };

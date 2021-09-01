@@ -17,7 +17,7 @@ export const AccountDetails = ({
         Account Address: {connectedAccount && shortAddress(connectedAccount)}
       </p>
       <p>Connected Network: {connectedNetwork} </p>
-      <p>Account Balance: {balance} </p>
+      <p>Account Balance: {`${Number(balance).toFixed(4)} ETH`} </p>
     </div>
   </div>
 );

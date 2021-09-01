@@ -5,6 +5,7 @@ import {
   connectMetamask,
   fetchMetamaskAccountDetails,
   checkMetamaskIsConnected,
+  transferEther,
 } from './metamask.service';
 
 export const MetamaskContext = React.createContext();
@@ -39,6 +40,13 @@ export const MetamaskContextProvider = ({ children }) => {
     await handleMetaMaskAccountDetails();
   };
 
+  const handleTransferEther = async () => {
+    const { accounts } = accountInfo;
+    const amount = 0.00001;
+    const receiverAddress = '0xb3Ad352862365fc5075134151D1124dD4f82b3bA';
+    await transferEther(receiverAddress, amount);
+  };
+
   React.useEffect(() => {
     (async () => {
       // only if metamask is connected
@@ -55,11 +63,11 @@ export const MetamaskContextProvider = ({ children }) => {
         });
       }
     })();
-  }, []);
+  }, [accountInfo]);
 
   return (
     <MetamaskContext.Provider
-      value={{ ...accountInfo, handleMetamaskConnection }}
+      value={{ ...accountInfo, handleMetamaskConnection, handleTransferEther }}
     >
       {children}
     </MetamaskContext.Provider>
