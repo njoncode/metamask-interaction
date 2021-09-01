@@ -6,8 +6,8 @@ import { AccountDetails as ConnectedAccountDetails } from '../components/Account
 
 const HomePage = () => {
   const {
-    connectedAccount,
     connectedNetwork,
+    connectedAccount,
     balance,
     handleMetamaskConnection,
   } = React.useContext(MetamaskContext);

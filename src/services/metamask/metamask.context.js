@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {
   connectMetamask,
   fetchMetamaskAccountDetails,
+  checkMetamaskIsConnected,
 } from './metamask.service';
 
 export const MetamaskContext = React.createContext();
@@ -37,6 +38,24 @@ export const MetamaskContextProvider = ({ children }) => {
 
     await handleMetaMaskAccountDetails();
   };
+
+  React.useEffect(() => {
+    (async () => {
+      // only if metamask is connected
+      if (await checkMetamaskIsConnected()) {
+        const { accounts, connectedNetwork, connectedAccount, balance } =
+          await fetchMetamaskAccountDetails();
+
+        setAccountInfo({
+          ...account,
+          accounts,
+          connectedNetwork,
+          connectedAccount,
+          balance,
+        });
+      }
+    })();
+  }, []);
 
   return (
     <MetamaskContext.Provider

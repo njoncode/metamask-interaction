@@ -22,6 +22,26 @@ export const connectMetamask = async () => {
   }
 };
 
+export const checkMetamaskIsConnected = async () => {
+  try {
+    // Check if metamask extension is installed in the browser
+    if (typeof window.ethereum !== 'undefined') {
+      // web3 instance for metamask
+      const web3 = new Web3(window.ethereum);
+
+      const accounts = await web3.eth.getAccounts();
+
+      return !!accounts.length;
+    }
+
+    return false;
+  } catch (err) {
+    // User denied access
+    console.error('handleConnect error: ', err);
+    return false;
+  }
+};
+
 export const fetchMetamaskAccountDetails = async () => {
   try {
     const web3 = await connectMetamask();
@@ -45,5 +65,11 @@ export const fetchMetamaskAccountDetails = async () => {
     };
   } catch (err) {
     console.error('fetchMetamaskAccountDetails error : ', err);
+    return {
+      accounts: [],
+      connectedNetwork: null,
+      connectedAccount: null,
+      balance: null,
+    };
   }
 };
