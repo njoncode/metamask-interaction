@@ -20,6 +20,8 @@ const account = {
 export const MetamaskContextProvider = ({ children }) => {
   const [accountInfo, setAccountInfo] = React.useState(account);
 
+  const [loading, setLoading] = React.useState(true);
+
   const handleMetaMaskAccountDetails = async () => {
     const { accounts, connectedNetwork, connectedAccount, balance } =
       await fetchMetamaskAccountDetails();
@@ -31,6 +33,7 @@ export const MetamaskContextProvider = ({ children }) => {
       connectedAccount,
       balance,
     });
+    setLoading(false);
   };
 
   const handleMetamaskConnection = async () => {
@@ -40,11 +43,10 @@ export const MetamaskContextProvider = ({ children }) => {
     await handleMetaMaskAccountDetails();
   };
 
-  const handleTransferEther = async () => {
-    const { accounts } = accountInfo;
-    const amount = 0.00001;
-    const receiverAddress = '0xb3Ad352862365fc5075134151D1124dD4f82b3bA';
+  const handleTransferEther = async (receiverAddress, amount) => {
+    const { balance } = accountInfo;
     await transferEther(receiverAddress, amount);
+    await handleMetaMaskAccountDetails();
   };
 
   React.useEffect(() => {
@@ -53,7 +55,7 @@ export const MetamaskContextProvider = ({ children }) => {
       if (await checkMetamaskIsConnected()) {
         const { accounts, connectedNetwork, connectedAccount, balance } =
           await fetchMetamaskAccountDetails();
-
+        setLoading(false);
         setAccountInfo({
           ...account,
           accounts,
@@ -63,11 +65,16 @@ export const MetamaskContextProvider = ({ children }) => {
         });
       }
     })();
-  }, [accountInfo]);
+  }, []);
 
   return (
     <MetamaskContext.Provider
-      value={{ ...accountInfo, handleMetamaskConnection, handleTransferEther }}
+      value={{
+        ...accountInfo,
+        handleMetamaskConnection,
+        handleTransferEther,
+        loading,
+      }}
     >
       {children}
     </MetamaskContext.Provider>

@@ -1,0 +1,70 @@
+.account-container {
+  // min-width: 50vh;
+  // min-height: 30vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #eb8922;
+  border: 1px solid #eb8922;
+  border-radius: 5px;
+  -moz-osx-font-smoothing: grayscale;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  transition: transform 0.25s ease-out;
+  box-shadow: 6px 6px 5px #eb8922;
+}
+
+.account-container:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+  background-color: #eb8922;
+}
+
+.account-container > * {
+  padding: 20px 0px;
+}
+
+.account-details > p {
+  line-height: 2;
+  font-weight: 600;
+}
+
+.account-details-heading {
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.account-details-values {
+  padding-left: 3px;
+}
+
+.eth-logo {
+  width: 100px;
+}
+
+.etherscan-url {
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+/* .account-container {
+  padding: 20px 15px;
+  width: 40vw;
+  min-height: 20vh;
+  border-radius: 4px;
+  box-shadow: 10px 10px 8px #888888;
+  background-color: rgb(207, 204, 204);
+  transition: background-color 2s ease-out;
+}
+
+.account-container:hover {
+  opacity: 0.8;
+  background-color: rgb(165, 160, 160);
+  cursor: pointer;
+}
+
+.account-details p {
+  font-weight: 500;
+} */

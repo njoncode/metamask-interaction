@@ -1,0 +1,18 @@
+.homepage-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.metamask-connector {
+  display: grid;
+}
+
+.metamask-logo {
+  width: 250px;
+  justify-self: center;
+  padding: 40px 20px;
+}
