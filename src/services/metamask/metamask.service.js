@@ -10,7 +10,9 @@ export const connectMetamask = async () => {
       // web3 instance for metamask
       const web3 = new Web3(window.ethereum);
 
-      await window.ethereum.enable();
+      // await window.ethereum.enable();
+
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
 
       return web3;
     }
@@ -53,7 +55,9 @@ export const fetchMetamaskAccountDetails = async () => {
     const { network } = metamaskNetworks(provider.chainId);
 
     // Request Metamask account access
-    await window.ethereum.enable();
+    // await window.ethereum.enable();
+    await window.ethereum.request({ method: 'eth_requestAccounts' });
+
     const accounts = await web3.eth.getAccounts();
     const balance = await web3.eth.getBalance(accounts[0]);
 

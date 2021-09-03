@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import transferEtherImage from '../images/transfer-eth.png';
-import { transferEther } from '../services/metamask/metamask.service';
 import FormInput from './FormInput';
 import CustomButton from './CustomButton';
 

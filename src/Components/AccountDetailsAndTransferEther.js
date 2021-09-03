@@ -27,7 +27,7 @@ export const AccountDetailsAndTransferEther = ({
 AccountDetailsAndTransferEther.propTypes = {
   connectedAccount: PropTypes.string.isRequired,
   connectedNetwork: PropTypes.string.isRequired,
-  balance: PropTypes.number.isRequired,
+  balance: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
   handleTransferEther: PropTypes.func.isRequired,
 };

@@ -4,8 +4,6 @@ import '../styles/homepage.css';
 
 import { MetamaskContext } from '../services/metamask/metamask.context';
 import { ConnectMetamask as MetamaskConnectButton } from '../components/ConnectMetamask';
-import { AccountDetails as ConnectedAccountDetails } from '../components/AccountDetails';
-import { TransferEther } from '../components/TransferEther';
 import { AccountDetailsAndTransferEther } from '../components/AccountDetailsAndTransferEther';
 import metamaskLogo from '../images/metamask.png';
 
@@ -18,26 +16,6 @@ const HomePage = () => {
     handleTransferEther,
     loading,
   } = React.useContext(MetamaskContext);
-
-  /**
-   * Possible states:
-   * CONNECT_METAMASK - Active when no account is found.
-   * ACCOUNT_DETAILS - Active when account is found (default case).
-   * TRANFER_ETHER - Active when account is found.
-   */
-  // const [formState, setFormState] = React.useState(null);
-
-  // React.useEffect(() => {
-  //   if (connectedAccount) {
-  //     setFormState('ACCOUNT_DETAILS');
-  //     return;
-  //   }
-  //   setFormState('CONNECT_METAMASK');
-  // }, [connectedAccount]);
-
-  // const handleViewTransferEther = () => {
-  //   setFormState('TRANSFER_ETHER');
-  // };
 
   return (
     <div className="homepage-container">

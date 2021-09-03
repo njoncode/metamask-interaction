@@ -3,5 +3,7 @@ export const generateEtherscanUrl = (connectedNetwork, connectedAccount) => {
     return `https://etherscan.io/address/${connectedAccount}`;
   }
 
-  return `https://${connectedNetwork.toLowerCase()}.etherscan.io/address/${connectedAccount}`;
+  return `https://${
+    connectedNetwork != null ? connectedNetwork.toLowerCase() : ''
+  }.etherscan.io/address/${connectedAccount}`;
 };
