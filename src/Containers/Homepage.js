@@ -36,18 +36,6 @@ const HomePage = () => {
           handleTransferEther={handleTransferEther}
         />
       )}
-      {/* {connectedAccount && (
-        <ConnectedAccountDetails
-          connectedAccount={connectedAccount}
-          connectedNetwork={connectedNetwork}
-          balance={balance}
-          loading={loading}
-        />
-      )}
-      {connectedAccount && (
-        <button type="submit">TransferEther</button>
-        <TransferEther handleTransferEther={handleTransferEther} />
-      )} */}
     </div>
   );
 };

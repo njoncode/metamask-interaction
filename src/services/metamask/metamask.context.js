@@ -29,7 +29,7 @@ export const MetamaskContextProvider = ({ children }) => {
       await fetchMetamaskAccountDetails();
 
     setAccountInfo({
-      ...account,
+      ...accountInfo,
       accounts,
       connectedNetwork,
       connectedAccount,
@@ -54,12 +54,13 @@ export const MetamaskContextProvider = ({ children }) => {
   React.useEffect(() => {
     (async () => {
       // only if metamask is connected
-      if ((await checkMetamaskIsConnected()) && !accountInfo.connectedAccount) {
+      if (await checkMetamaskIsConnected()) {
         const { accounts, connectedNetwork, connectedAccount, balance } =
           await fetchMetamaskAccountDetails();
         setLoading(false);
+
         setAccountInfo({
-          ...account,
+          ...accountInfo,
           accounts,
           connectedNetwork,
           connectedAccount,
@@ -68,13 +69,16 @@ export const MetamaskContextProvider = ({ children }) => {
       }
 
       // Runs whenever account is switched, connected or disconnected
-      window.ethereum.on('accountsChanged', (accounts) => {
+      window.ethereum.on('accountsChanged', async (accounts) => {
         // Case1: accounts.length && accounts[0] !== connectedAccount
         if (accounts.length && accounts[0] !== accountInfo.connectedAccount) {
+          const { connectedNetwork } = await fetchMetamaskAccountDetails();
+
           setAccountInfo({
             ...accountInfo,
             accounts,
             connectedAccount: accounts[0],
+            connectedNetwork,
           });
         }
 
@@ -86,24 +90,15 @@ export const MetamaskContextProvider = ({ children }) => {
             connectedAccount: null,
           });
         }
+        //  This will set connectedAccount to null which will render the ConnectMetamask component (asking user to connect to Metamask)
       });
 
-      console.log('accountInfo before networkChanged: ', accountInfo);
       // Runs whenever network changes
       window.ethereum.on('chainChanged', async (chainId) => {
-        console.log('chainId: ', chainId);
-        const changedNetwork = await metamaskNetworks(chainId);
-        console.log('networkChanged: ', changedNetwork);
-        console.log('accountInfo after networkChanged: ', accountInfo);
+        const accountsDetails = await fetchMetamaskAccountDetails();
         setAccountInfo({
-          ...accountInfo,
-          connectedNetwork: changedNetwork.network,
+          ...accountsDetails,
         });
-        // const accountsDetails = await fetchMetamaskAccountDetails();
-        // setAccountInfo({
-        //   ...accountsDetails,
-        //   connectedNetwork: changedNetwork.network,
-        // });
       });
     })();
   }, []);
