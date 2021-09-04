@@ -7,6 +7,8 @@ import { ConnectMetamask as MetamaskConnectButton } from '../components/ConnectM
 import { AccountDetailsAndTransferEther } from '../components/AccountDetailsAndTransferEther';
 import metamaskLogo from '../images/metamask.png';
 
+import { Spinner } from '../components/Spinner';
+
 const HomePage = () => {
   const {
     connectedNetwork,
@@ -17,9 +19,11 @@ const HomePage = () => {
     loading,
   } = React.useContext(MetamaskContext);
 
+  console.log('🚜🚛🚒loading: ', loading);
+
   return (
     <div className="homepage-container">
-      {!connectedAccount && (
+      {!loading && !connectedAccount && (
         <div className="metamask-connector">
           <img src={metamaskLogo} alt="metamask" className="metamask-logo" />
           <MetamaskConnectButton
@@ -27,7 +31,7 @@ const HomePage = () => {
           />
         </div>
       )}
-      {connectedAccount && (
+      {!loading && connectedAccount && (
         <AccountDetailsAndTransferEther
           connectedAccount={connectedAccount}
           connectedNetwork={connectedNetwork}
@@ -36,6 +40,7 @@ const HomePage = () => {
           handleTransferEther={handleTransferEther}
         />
       )}
+      {loading && <Spinner />}
     </div>
   );
 };

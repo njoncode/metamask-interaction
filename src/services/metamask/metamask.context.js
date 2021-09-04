@@ -35,13 +35,16 @@ export const MetamaskContextProvider = ({ children }) => {
       connectedAccount,
       balance,
     });
-    setLoading(false);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
   };
 
   const handleMetamaskConnection = async () => {
+    setLoading(true);
     const web3 = await connectMetamask();
     console.log('web3: ', web3);
-
     await handleMetaMaskAccountDetails();
   };
 
@@ -57,8 +60,6 @@ export const MetamaskContextProvider = ({ children }) => {
       if (await checkMetamaskIsConnected()) {
         const { accounts, connectedNetwork, connectedAccount, balance } =
           await fetchMetamaskAccountDetails();
-        setLoading(false);
-
         setAccountInfo({
           ...accountInfo,
           accounts,
@@ -66,10 +67,14 @@ export const MetamaskContextProvider = ({ children }) => {
           connectedAccount,
           balance,
         });
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);
       }
 
       // Runs whenever account is switched, connected or disconnected
       window.ethereum.on('accountsChanged', async (accounts) => {
+        setLoading(true);
         // Case1: accounts.length && accounts[0] !== connectedAccount
         if (accounts.length && accounts[0] !== accountInfo.connectedAccount) {
           const { connectedNetwork } = await fetchMetamaskAccountDetails();
@@ -80,6 +85,10 @@ export const MetamaskContextProvider = ({ children }) => {
             connectedAccount: accounts[0],
             connectedNetwork,
           });
+
+          setTimeout(() => {
+            setLoading(false);
+          }, 2000);
         }
 
         // Case2: accounts.length === 0
@@ -95,10 +104,15 @@ export const MetamaskContextProvider = ({ children }) => {
 
       // Runs whenever network changes
       window.ethereum.on('chainChanged', async (chainId) => {
+        setLoading(true);
         const accountsDetails = await fetchMetamaskAccountDetails();
         setAccountInfo({
           ...accountsDetails,
         });
+
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);
       });
     })();
   }, []);
