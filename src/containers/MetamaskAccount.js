@@ -6,24 +6,39 @@ import { MetamaskContext } from '../services/metamask/metamask.context';
 import { ConnectMetamask as MetamaskConnectButton } from '../components/ConnectMetamask';
 import { AccountDetailsAndTransferEther } from '../components/AccountDetailsAndTransferEther';
 import metamaskLogo from '../images/metamask.png';
+import downloadMetamask from '../images/download-metamask.png';
 
 import { Spinner } from '../components/Spinner';
 
-const HomePage = () => {
+const MetamaskAccount = () => {
   const {
     connectedNetwork,
     connectedAccount,
     balance,
     handleMetamaskConnection,
     handleTransferEther,
+    isMetamaskInstalled,
     loading,
   } = React.useContext(MetamaskContext);
 
-  console.log('🚜🚛🚒loading: ', loading);
+  console.log('🔥 loading: ', loading);
+
+  console.log('🔥 isMetamaskInstalled: ', loading);
 
   return (
     <div className="homepage-container">
-      {!loading && !connectedAccount && (
+      {!loading && !isMetamaskInstalled && (
+        <a href="https://metamask.io/" target="_blank" rel="noreferrer">
+          <img
+            className="install-metamask"
+            src={downloadMetamask}
+            alt="install metamask"
+            style={{ width: '600px' }}
+          />
+        </a>
+      )}
+
+      {!loading && isMetamaskInstalled && !connectedAccount && (
         <div className="metamask-connector">
           <img src={metamaskLogo} alt="metamask" className="metamask-logo" />
           <MetamaskConnectButton
@@ -31,7 +46,8 @@ const HomePage = () => {
           />
         </div>
       )}
-      {!loading && connectedAccount && (
+
+      {!loading && isMetamaskInstalled && connectedAccount && (
         <AccountDetailsAndTransferEther
           connectedAccount={connectedAccount}
           connectedNetwork={connectedNetwork}
@@ -40,9 +56,10 @@ const HomePage = () => {
           handleTransferEther={handleTransferEther}
         />
       )}
+
       {loading && <Spinner />}
     </div>
   );
 };
 
-export default HomePage;
+export default MetamaskAccount;

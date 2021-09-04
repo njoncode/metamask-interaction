@@ -16,3 +16,13 @@
   justify-self: center;
   padding: 40px 20px;
 }
+
+.install-metamask {
+  width: 600px;
+  cursor: pointer;
+  transition: transform 2s;
+}
+
+.install-metamask:hover {
+  transform: scale(1.15);
+}

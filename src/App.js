@@ -1,6 +1,6 @@
 import React from 'react';
 
-import HomePage from './containers/Homepage';
+import MetamaskAccount from './containers/MetamaskAccount';
 import { MetamaskContextProvider } from './services/metamask/metamask.context';
 
 import './App.css';
@@ -9,7 +9,7 @@ function App() {
   return (
     <div className="App">
       <MetamaskContextProvider>
-        <HomePage />
+        <MetamaskAccount />
       </MetamaskContextProvider>
     </div>
   );

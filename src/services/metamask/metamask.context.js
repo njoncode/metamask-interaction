@@ -22,9 +22,12 @@ const account = {
 export const MetamaskContextProvider = ({ children }) => {
   const [accountInfo, setAccountInfo] = React.useState(account);
 
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
+
+  const [isMetamaskInstalled, setIsMetamaskInstalled] = React.useState(true);
 
   const handleMetaMaskAccountDetails = async () => {
+    setLoading(true);
     const { accounts, connectedNetwork, connectedAccount, balance } =
       await fetchMetamaskAccountDetails();
 
@@ -42,9 +45,11 @@ export const MetamaskContextProvider = ({ children }) => {
   };
 
   const handleMetamaskConnection = async () => {
-    setLoading(true);
     const web3 = await connectMetamask();
     console.log('web3: ', web3);
+    // if (!web3) {
+    //   setIsMetamaskInstalled(false);
+    // }
     await handleMetaMaskAccountDetails();
   };
 
@@ -55,66 +60,84 @@ export const MetamaskContextProvider = ({ children }) => {
   };
 
   React.useEffect(() => {
-    (async () => {
-      // only if metamask is connected
-      if (await checkMetamaskIsConnected()) {
-        const { accounts, connectedNetwork, connectedAccount, balance } =
-          await fetchMetamaskAccountDetails();
-        setAccountInfo({
-          ...accountInfo,
-          accounts,
-          connectedNetwork,
-          connectedAccount,
-          balance,
-        });
-        setTimeout(() => {
-          setLoading(false);
-        }, 2000);
-      }
-
-      // Runs whenever account is switched, connected or disconnected
-      window.ethereum.on('accountsChanged', async (accounts) => {
+    try {
+      (async () => {
         setLoading(true);
-        // Case1: accounts.length && accounts[0] !== connectedAccount
-        if (accounts.length && accounts[0] !== accountInfo.connectedAccount) {
-          const { connectedNetwork } = await fetchMetamaskAccountDetails();
-
+        // only if metamask is connected
+        if (await checkMetamaskIsConnected()) {
+          const { accounts, connectedNetwork, connectedAccount, balance } =
+            await fetchMetamaskAccountDetails();
           setAccountInfo({
             ...accountInfo,
             accounts,
-            connectedAccount: accounts[0],
             connectedNetwork,
-          });
-
-          setTimeout(() => {
-            setLoading(false);
-          }, 2000);
-        }
-
-        // Case2: accounts.length === 0
-        if (!accounts.length) {
-          setAccountInfo({
-            ...accountInfo,
-            accounts: [],
-            connectedAccount: null,
+            connectedAccount,
+            balance,
           });
         }
-        //  This will set connectedAccount to null which will render the ConnectMetamask component (asking user to connect to Metamask)
-      });
 
-      // Runs whenever network changes
-      window.ethereum.on('chainChanged', async (chainId) => {
-        setLoading(true);
-        const accountsDetails = await fetchMetamaskAccountDetails();
-        setAccountInfo({
-          ...accountsDetails,
-        });
+        if (window.ethereum) {
+          // Runs whenever account is switched, connected or disconnected
+          window.ethereum.on('accountsChanged', async (accounts) => {
+            setLoading(true);
+            // Case1: accounts.length && accounts[0] !== connectedAccount
+            if (
+              accounts.length &&
+              accounts[0] !== accountInfo.connectedAccount
+            ) {
+              const { connectedNetwork } = await fetchMetamaskAccountDetails();
+
+              setAccountInfo({
+                ...accountInfo,
+                accounts,
+                connectedAccount: accounts[0],
+                connectedNetwork,
+              });
+            }
+
+            // Case2: accounts.length === 0
+            if (!accounts.length) {
+              setAccountInfo({
+                ...accountInfo,
+                accounts: [],
+                connectedAccount: null,
+              });
+            }
+            //  This will set connectedAccount to null which will render the ConnectMetamask component (asking user to connect to Metamask)
+
+            setTimeout(() => {
+              setLoading(false);
+            }, 2000);
+          });
+
+          // Runs whenever network changes
+          window.ethereum.on('chainChanged', async (chainId) => {
+            setLoading(true);
+
+            const accountsDetails = await fetchMetamaskAccountDetails();
+            setAccountInfo({
+              ...accountsDetails,
+            });
+
+            setTimeout(() => {
+              setLoading(false);
+            }, 2000);
+          });
+        } else {
+          setIsMetamaskInstalled(false);
+        }
 
         setTimeout(() => {
           setLoading(false);
         }, 2000);
-      });
-    })();
+      })();
+    } catch (err) {
+      console.error('MetamaskContextProvider useEffect Error: ', err);
+
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    }
   }, []);
 
   return (
@@ -123,6 +146,7 @@ export const MetamaskContextProvider = ({ children }) => {
         ...accountInfo,
         handleMetamaskConnection,
         handleTransferEther,
+        isMetamaskInstalled,
         loading,
       }}
     >
