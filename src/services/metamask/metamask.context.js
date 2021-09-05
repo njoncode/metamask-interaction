@@ -85,13 +85,15 @@ export const MetamaskContextProvider = ({ children }) => {
               accounts.length &&
               accounts[0] !== accountInfo.connectedAccount
             ) {
-              const { connectedNetwork } = await fetchMetamaskAccountDetails();
+              const { connectedNetwork, balance } =
+                await fetchMetamaskAccountDetails();
 
               setAccountInfo({
                 ...accountInfo,
                 accounts,
                 connectedAccount: accounts[0],
                 connectedNetwork,
+                balance,
               });
             }
 
@@ -149,6 +151,7 @@ export const MetamaskContextProvider = ({ children }) => {
         isMetamaskInstalled,
         loading,
       }}
+      name="Metamask Account Details"
     >
       {children}
     </MetamaskContext.Provider>
